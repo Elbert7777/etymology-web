@@ -245,7 +245,7 @@
           <span class="tag suffix-c">红色 = 后缀</span> &nbsp; 决定词性（-tion 名词 / -able 形容词 / -ize 动词…）
         </div>
         <div class="root-line">
-          <span class="tag root-c">绿色 = 词根</span> &nbsp; 核心含义（pose 放 / port 搬运 / dict 说…）
+          <span class="tag root-c">绿色 = 词根</span> &nbsp; 核心含义（pose 放 / radi 射线 / radic 根…）
         </div>
         <div class="root-line">
           <span class="mean">黄色 = 准确释义</span> &nbsp; 这个词真正要记住的中文意思（如：提议；求婚）
@@ -337,7 +337,7 @@
           <button class="btn ghost" id="flip">翻面</button>
           <button class="btn" id="next">下一题 →</button>
           <button class="btn ghost" id="shuffle">🔀 乱序</button>
-          <span class="prog" id="prog">1 / 20</span>
+          <span class="prog" id="prog">1 / ?</span>
         </div>
         <div class="bar"><i id="barfill"></i></div>
         <div class="flip" id="flipCard">
@@ -348,7 +348,7 @@
         </div>
         <div class="hint">💡 提示：闪卡页支持键盘操作 Space=翻面 ← →=切换</div>
 
-        <h3 class="sub-h" style="margin-top:28px">卡片清单（共20张）</h3>
+        <h3 class="sub-h" style="margin-top:28px">卡片清单 <span id="deckCount"></span></h3>
         <div id="cardList"></div>
       </section>
     </div>
@@ -381,14 +381,18 @@ const ROOTS = [
       <div class="root-line"><span class="word">radius</span> = <span style="color:var(--green);font-weight:700">radi(射线)</span> + us → 想象从圆心射出的"辐条" → <span class="mean">n. 半径</span></div>
       <div class="root-line"><span class="word">radiate</span> = <span style="color:var(--green);font-weight:700">radi(放射)</span> + <span style="color:var(--red);font-weight:700">ate(动词后缀)</span> → 像射线一样向外发散 → <span class="mean">v. 放射；散发</span></div>
       <div class="root-line"><span class="word">radiation</span> = <span style="color:var(--green);font-weight:700">radi(放射)</span> + <span style="color:var(--red);font-weight:700">ation(名词后缀)</span> → 向外发出的射线或能量 → <span class="mean">n. 辐射</span></div>
+      <div class="root-line"><span class="word">radiant</span> = <span style="color:var(--green);font-weight:700">radi(放射)</span> + <span style="color:var(--red);font-weight:700">ant(形容词后缀)</span> → 像射线一样发光发亮 → <span class="mean">adj. 光芒四射的；容光焕发的</span></div>
+      <div class="root-line"><span class="word">radio</span> = <span style="color:var(--green);font-weight:700">radi(射线)</span> + o → 靠电磁波（"射线"）传播信号的装置 → <span class="mean">n. 收音机；无线电</span></div>
+      <div class="note"><b>💡 巧记：</b>从圆心射出的辐条（radius）→ 放射（radiate）→ 辐射（radiation）→ 用电磁波传声的收音机（radio）。</div>
     `
   },
   {
     id:'radic', root:'radic', meaning:'根（root）', en:'root', color:'#0f7a3d',
     html:`
       <h3 class="sub-h">词根拆解</h3>
-      <div class="root-line"><span class="word">radical</span> = <span style="color:var(--green);font-weight:700">radic(根)</span> + <span style="color:var(--red);font-weight:700">al(形容词后缀)</span> → 触及根本 → <span class="mean">adj. 根本的 / 彻底的</span></div>
-      <div class="root-line"><span class="word">eradicate</span> = <span style="color:var(--blue);font-weight:700">e(向外)</span> + <span style="color:var(--green);font-weight:700">radic(根)</span> + <span style="color:var(--red);font-weight:700">ate(动词后缀)</span> → 把根拔出来 → <span class="mean">v. 根除</span></div>
+      <div class="root-line"><span class="word">radical</span> = <span style="color:var(--green);font-weight:700">radic(根)</span> + <span style="color:var(--red);font-weight:700">al(形容词后缀)</span> → 触及根本 → <span class="mean">adj. 根本的；彻底的</span></div>
+      <div class="root-line"><span class="word">eradicate</span> = <span style="color:var(--blue);font-weight:700">e(向外)</span> + <span style="color:var(--green);font-weight:700">radic(根)</span> + <span style="color:var(--red);font-weight:700">ate(动词后缀)</span> → 连根拔出去 → <span class="mean">v. 根除；消灭</span></div>
+      <div class="root-line"><span class="word">radish</span> = <span style="color:var(--green);font-weight:700">radic(根)</span> + sh → 萝卜是长在地下的根茎类蔬菜，radish 正源自 radix（根） → <span class="mean">n. 小萝卜</span></div>
       <div class="warnbox"><b>⚠️ 易混提示：</b><span class="tag root-c">radi-</span> 是"射线、辐射"，<span class="tag root-c">radic-</span> 是"根"。两者拼写相近，但不是同一个词根。</div>
     `
   },
@@ -396,43 +400,32 @@ const ROOTS = [
     id:'pose', root:'pose', meaning:'放 / 放置', en:'put', color:'#0f7a3d',
     html:`
       <h3 class="sub-h">词根拆解</h3>
-      <div class="root-line"><span class="word">expose</span> = <span style="color:var(--blue);font-weight:700">ex(向外)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 往外放 → <span class="mean">v. 暴露；揭露</span></div>
-      <div class="root-line"><span class="word">compose</span> = <span style="color:var(--blue);font-weight:700">com(一起)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放在一起 → <span class="mean">v. 组成；创作</span></div>
-      <div class="root-line"><span class="word">propose</span> = <span style="color:var(--blue);font-weight:700">pro(向前)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 把想法放到前面 → <span class="mean">v. 提议；求婚</span></div>
-      <div class="root-line"><span class="word">oppose</span> = <span style="color:var(--blue);font-weight:700">op(对面/反对)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 把观点放对面 → <span class="mean">v. 反对</span>
-        <div class="sub" style="color:var(--muted); margin-top:6px">💡 op- 是 <b>ob-</b> 在 p 前的变体，单词实际拼作 <b>oppose</b></div>
+      <div class="root-line"><span class="word">expose</span> = <span style="color:var(--blue);font-weight:700">ex(向外)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 往外放 → <span class="mean">v. 暴露；揭露；使显露</span>
+        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 同义词：reveal / disclose / uncover</div>
       </div>
-      <div class="root-line"><span class="word">dispose</span> = <span style="color:var(--blue);font-weight:700">dis(分开)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放到别处 → <span class="mean">v. 处理；丢弃</span></div>
-      <div class="root-line"><span class="word">impose</span> = <span style="color:var(--blue);font-weight:700">im(进入)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放到别人身上 → <span class="mean">v. 强加</span></div>
-    `
-  },
-  {
-    id:'port', root:'port', meaning:'搬运 / 携带', en:'carry', color:'#0f7a3d',
-    html:`
-      <h3 class="sub-h">词根拆解</h3>
-      <div class="root-line"><span class="word">export</span> = <span style="color:var(--blue);font-weight:700">ex(向外)</span> + <span style="color:var(--green);font-weight:700">port(搬运)</span> → 运出去 → <span class="mean">v./n. 出口；输出</span></div>
-      <div class="root-line"><span class="word">import</span> = <span style="color:var(--blue);font-weight:700">im(进入)</span> + <span style="color:var(--green);font-weight:700">port(搬运)</span> → 运进来 → <span class="mean">v./n. 进口；输入</span></div>
-      <div class="root-line"><span class="word">transport</span> = <span style="color:var(--blue);font-weight:700">trans(转移)</span> + <span style="color:var(--green);font-weight:700">port(搬运)</span> → 搬运转移 → <span class="mean">v./n. 运输；交通</span></div>
-      <div class="root-line"><span class="word">portable</span> = <span style="color:var(--green);font-weight:700">port(携带)</span> + <span style="color:var(--red);font-weight:700">able(能)</span> → 可以随身携带 → <span class="mean">adj. 便携式的；手提的</span></div>
-    `
-  },
-  {
-    id:'vis', root:'vis / vid', meaning:'看', en:'see', color:'#0f7a3d',
-    html:`
-      <h3 class="sub-h">词根拆解</h3>
-      <div class="root-line"><span class="word">visible</span> = <span style="color:var(--green);font-weight:700">vis(看)</span> + <span style="color:var(--red);font-weight:700">ible(能)</span> → 能看到的 → <span class="mean">adj. 可见的</span></div>
-      <div class="root-line"><span class="word">invisible</span> = <span style="color:var(--blue);font-weight:700">in(不)</span> + <span style="color:var(--green);font-weight:700">vis(看)</span> + <span style="color:var(--red);font-weight:700">ible(能)</span> → 不能看到的 → <span class="mean">adj. 看不见的</span></div>
-      <div class="root-line"><span class="word">video</span> = <span style="color:var(--green);font-weight:700">vid(看)</span> + eo → 用来看的影像 → <span class="mean">n. 视频</span></div>
-      <div class="root-line"><span class="word">television</span> = <span style="color:var(--blue);font-weight:700">tele(远)</span> + <span style="color:var(--green);font-weight:700">vis(看)</span> + <span style="color:var(--red);font-weight:700">ion(名词后缀)</span> → 看远处传来的画面 → <span class="mean">n. 电视</span></div>
-    `
-  },
-  {
-    id:'dict', root:'dict', meaning:'说 / 断言', en:'say', color:'#0f7a3d',
-    html:`
-      <h3 class="sub-h">词根拆解</h3>
-      <div class="root-line"><span class="word">predict</span> = <span style="color:var(--blue);font-weight:700">pre(预先)</span> + <span style="color:var(--green);font-weight:700">dict(说)</span> → 预先说出来 → <span class="mean">v. 预测；预言</span></div>
-      <div class="root-line"><span class="word">dictionary</span> = <span style="color:var(--green);font-weight:700">dict(说)</span> + ionary → 关于词语"说法"的书 → <span class="mean">n. 字典</span></div>
-      <div class="root-line"><span class="word">contradict</span> = <span style="color:var(--blue);font-weight:700">contra(相反)</span> + <span style="color:var(--green);font-weight:700">dict(说)</span> → 说相反的话 → <span class="mean">v. 反驳；矛盾</span></div>
+      <div class="root-line"><span class="word">compose</span> = <span style="color:var(--blue);font-weight:700">com(一起)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放到一起 → <span class="mean">v. 组成；创作</span>
+        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 相关词：composition n. 作文/乐曲/作品；composite adj. 复合的、合成的</div>
+      </div>
+      <div class="root-line"><span class="word">propose</span> = <span style="color:var(--blue);font-weight:700">pro(向前)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 把想法放到前面 → <span class="mean">v. 提议；提名；求婚</span></div>
+      <div class="root-line"><span class="word">dispose</span> = <span style="color:var(--blue);font-weight:700">dis(分开)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放到别处 → <span class="mean">v. 处理；丢弃；安排</span>
+        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 同义词：discard（丢弃）；固定搭配 dispose of 处理掉</div>
+      </div>
+      <div class="root-line"><span class="word">oppose</span> = <span style="color:var(--blue);font-weight:700">op(对面)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 把观点放到对面 → <span class="mean">v. 反对</span>
+        <div class="sub" style="color:var(--muted); margin-top:6px">💡 op- 是 ob- 在 p 前的变体，单词仍拼作 <b>oppose</b>；opponent n. 对手、反对者（op + pon(放) + ent(人)）</div>
+      </div>
+      <div class="root-line"><span class="word">depose</span> = <span style="color:var(--blue);font-weight:700">de(向下)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 把某人从位置上放下来 → <span class="mean">v. 废除；罢免</span>
+        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 相关词：deposit n. 沉淀物、定金（de 向下 + posit 放 → 放下的东西）</div>
+      </div>
+      <div class="root-line"><span class="word">impose</span> = <span style="color:var(--blue);font-weight:700">im(进入/在…上)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放到别人身上 → <span class="mean">v. 强加；征税</span></div>
+      <div class="root-line"><span class="word">position</span> = <span style="color:var(--green);font-weight:700">posit(放)</span> + <span style="color:var(--red);font-weight:700">ion(名词后缀)</span> → 放置的地方 → <span class="mean">n. 位置；职位</span>
+        <div class="sub" style="color:var(--muted); margin-top:6px">💡 posit 是 pose 的变体（拉丁语 positus），同类还有 deposit、composite</div>
+      </div>
+      <div class="root-line"><span class="word">suppose</span> = <span style="color:var(--blue);font-weight:700">sup(在…下)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放在底下当作前提 → <span class="mean">v. 假设；猜想</span>
+        <div class="sub" style="color:var(--muted); margin-top:6px">💡 sup- 是 sub- 在 p 前的变体，单词仍拼作 <b>suppose</b></div>
+      </div>
+      <div class="root-line"><span class="word">postpone</span> = <span style="color:var(--blue);font-weight:700">post(后)</span> + <span style="color:var(--green);font-weight:700">pon(放)</span> + e → 放到后面 → <span class="mean">v. 推迟；延期</span>
+        <div class="sub" style="color:var(--muted); margin-top:6px">💡 pon 是 pos 的变体（拉丁语 ponere），同类还有 opponent（放到对面的人）</div>
+      </div>
     `
   }
 ];
@@ -444,18 +437,25 @@ const deck = [
   ["表示'重新/再次'的前缀？","re → return 返回"],
   ["表示'共同/一起'的前缀？","com / con / co / col → connect 连接"],
   ["表示'否定'的前缀有哪些？","un / im / in / dis → unhappy 不快乐"],
-  ["词根 radi 表示？","射线、辐射 → radius 半径"],
+  ["词根 radi 表示？","射线、辐射(ray) → radius 半径"],
   ["词根 radic 表示？","根(root) → radical 根本的"],
   ["词根 pose 表示？","放、放置(put) → expose 暴露"],
-  ["oppose 怎么拆分？","op(对面/反对) + pose(放) → 反对"],
+  ["radi 和 radic 的区别？","radi=射线/辐射，radic=根，拼写相近但不是同一词根"],
+  ["eradicate 怎么拆分？","e(向外) + radic(根) + ate → 连根拔出去 → 根除"],
+  ["radical 怎么拆分？","radic(根) + al(形容词) → 触及根本 → 根本的；彻底的"],
+  ["expose 怎么拆分？","ex(向外) + pose(放) → 往外放 → 暴露；揭露"],
+  ["compose 怎么拆分？","com(一起) + pose(放) → 放到一起 → 组成；创作"],
+  ["propose 怎么拆分？","pro(向前) + pose(放) → 把想法放前面 → 提议；求婚"],
+  ["dispose 怎么拆分？","dis(分开) + pose(放) → 放到别处 → 处理；丢弃"],
+  ["oppose 怎么拆分？","op(对面) + pose(放) → 把观点放对面 → 反对（op- 是 ob- 变体）"],
+  ["impose 怎么拆分？","im(进入/在…上) + pose(放) → 放到别人身上 → 强加"],
+  ["depose 怎么拆分？","de(向下) + pose(放) → 从位置上放下来 → 罢免；废除"],
+  ["position 怎么拆分？","posit(放) + ion(名词) → 放置的地方 → 位置（posit 是 pose 变体）"],
+  ["suppose 怎么拆分？","sup(在…下) + pose(放) → 放在底下作前提 → 假设（sup- 是 sub- 变体）"],
+  ["postpone 怎么拆分？","post(后) + pon(放) → 放到后面 → 推迟（pon 是 pos 变体）"],
   ["前缀决定什么？","词义（意思）"],
   ["后缀决定什么？","词性（名词/动词/形容词）"],
   ["词根决定什么？","核心义（单词的根本意思）"],
-  ["export 怎么拆分？","ex(外) + port(搬运) → 运出去 → 出口"],
-  ["词根 port 表示？","搬运、携带 → transport 运输"],
-  ["词根 vis/vid 表示？","看(see) → visible 可见的"],
-  ["television 怎么拆分？","tele(远) + vis(看) + ion → 电视"],
-  ["predict 怎么拆分？","pre(预先) + dict(说) → 预测"],
   ["表示'转移/转变'的前缀？","trans → transfer 转移"],
   ["表示'相互之间'的前缀？","inter → internet 互联网"],
   ["动词后缀有哪些？","-ate / -ize / -ify / -ish"]
@@ -637,6 +637,7 @@ document.getElementById('shuffle').onclick = ()=>{
 
 /* 卡片清单 */
 const cardList = document.getElementById('cardList');
+document.getElementById('deckCount').textContent = '（共 ' + deck.length + ' 张）';
 deck.forEach(c=>{
   const d = document.createElement('div');
   d.className = 'list-item';
