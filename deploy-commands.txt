@@ -1,0 +1,38 @@
+# 词根词缀法学习工具 - GitHub Pages 部署命令
+
+## 步骤 1: 在 GitHub 创建仓库
+访问: https://github.com/new
+仓库名: etymology-web
+可见性: Public（公开）
+
+## 步骤 2: 推送代码（在项目目录执行）
+# 以下命令已内置你的 GitHub 用户名 Elbert7777，可直接执行
+
+cd "C:\Users\21010\WorkBuddy\2026-08-29-11-03-15\etymology-web"
+git remote add origin https://github.com/Elbert7777/etymology-web.git
+git branch -M main
+git push -u origin main
+
+## 步骤 3: 启用 GitHub Pages
+1. 访问你的仓库页面: https://github.com/Elbert7777/etymology-web
+2. 点击 Settings（设置）
+3. 在左侧菜单找到 Pages
+4. 在 "Source" 下选择:
+   - Branch: main
+   - Folder: / (root)
+5. 点击 Save（保存）
+
+## 步骤 4: 访问你的网站
+等待 1-2 分钟后，访问:
+https://Elbert7777.github.io/etymology-web/
+
+🎉 完成！现在你可以随时随地访问学习了！
+
+## 常用更新命令（当你修改内容后）
+cd "C:\Users\21010\WorkBuddy\2026-08-29-11-03-15\etymology-web"
+git add -A
+git commit -m "更新内容"
+git push
+
+## 本地预览
+直接用浏览器打开项目中的 index.html 文件即可本地预览

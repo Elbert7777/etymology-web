@@ -33,7 +33,7 @@
 ## 🎯 使用方法
 
 ### 在线访问
-直接访问 GitHub Pages：[https://yourusername.github.io/etymology-web/](https://yourusername.github.io/etymology-web/)
+直接访问 GitHub Pages：[https://Elbert7777.github.io/etymology-web/](https://Elbert7777.github.io/etymology-web/)
 
 ### 本地使用
 1. 克隆或下载本仓库
@@ -63,7 +63,7 @@ etymology-web/
 1. 创建 GitHub 仓库
 2. 推送代码到仓库
 3. 在仓库设置中启用 GitHub Pages
-4. 选择 `master` 分支作为源
+4. 选择 `main` 分支作为源
 5. 访问生成的网址
 
 ## 📝 学习建议
