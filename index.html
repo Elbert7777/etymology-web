@@ -578,7 +578,9 @@ ROOTS.forEach((r, idx) => {
       <button onclick="showView('root-${prev.id}')">← 上一篇：${prev.root}</button>
       <button onclick="showView('roots')">🗂 词根索引</button>
       <button onclick="showView('root-${next.id}')">下一篇：${next.root} →</button>
+      <button onclick="startRootTest('${r.id}')" style="background:var(--blue);color:#fff;border-color:var(--blue)">🎴 测试本词根</button>
     </div>
+    <p class="hint" style="margin-top:12px">💡 学完本词根，点上面的「🎴 测试本词根」即可只练刚学的这几个词。</p>
   `;
   rootViewsEl.appendChild(div);
 });
@@ -626,6 +628,11 @@ function showView(id){
     a.classList.toggle('active', a.dataset.goto === id || (id.startsWith('root-') && a.dataset.goto==='roots'));
   });
   currentView = id;
+  if(id==='cards' && !fromRootTest){
+    activeDeck = deck; activeOrder = deck.map((_,i)=>i); activePos = 0;
+    renderCard(); renderCardList(deck);
+  }
+  fromRootTest = false;
   history.replaceState(null,'','#/'+id);
   window.scrollTo({top:0});
   document.getElementById('main').scrollTop = 0;
@@ -760,8 +767,10 @@ document.addEventListener('click', e=>{
 });
 
 /* ================= 闪卡逻辑 ================= */
-let order = deck.map((_,i)=>i);
-let pos = 0;
+let activeDeck = deck;
+let activeOrder = deck.map((_,i)=>i);
+let activePos = 0;
+let fromRootTest = false;
 const card = document.getElementById('flipCard');
 const qEl = document.getElementById('q');
 const aEl = document.getElementById('a');
@@ -771,45 +780,85 @@ const bar = document.getElementById('barfill');
 function renderCard(){
   stopSpeak();
   card.classList.remove('flipped');
-  qEl.textContent = deck[order[pos]][0];
-  aEl.textContent = deck[order[pos]][1];
-  prog.textContent = (pos+1) + ' / ' + deck.length;
-  bar.style.width = ((pos+1)/deck.length*100) + '%';
+  qEl.textContent = activeDeck[activeOrder[activePos]][0];
+  aEl.textContent = activeDeck[activeOrder[activePos]][1];
+  prog.textContent = (activePos+1) + ' / ' + activeDeck.length;
+  bar.style.width = ((activePos+1)/activeDeck.length*100) + '%';
 }
 /* 翻面：翻到背面（看答案）时朗读该卡单词（仅单词卡有发音词） */
 function toggleFlip(){
   const goingBack = !card.classList.contains('flipped');
   card.classList.toggle('flipped');
-  if(goingBack && deck[order[pos]][2]) speakWord(deck[order[pos]][2]);
+  const cur = activeDeck[activeOrder[activePos]];
+  if(goingBack && cur[2]) speakWord(cur[2]);
 }
 document.getElementById('flip').onclick = toggleFlip;
 card.onclick = toggleFlip;
 document.getElementById('replay').onclick = (e)=>{
   e.stopPropagation();
-  const w = deck[order[pos]][2];
+  const w = activeDeck[activeOrder[activePos]][2];
   if(w) speakWord(w);
 };
-document.getElementById('next').onclick = ()=>{ pos=(pos+1)%deck.length; renderCard(); };
-document.getElementById('prev').onclick = ()=>{ pos=(pos-1+deck.length)%deck.length; renderCard(); };
+document.getElementById('next').onclick = ()=>{ activePos=(activePos+1)%activeDeck.length; renderCard(); };
+document.getElementById('prev').onclick = ()=>{ activePos=(activePos-1+activeDeck.length)%activeDeck.length; renderCard(); };
 document.getElementById('shuffle').onclick = ()=>{
-  for(let i=deck.length-1;i>0;i--){
+  for(let i=activeDeck.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
-    [order[i],order[j]]=[order[j],order[i]];
+    [activeOrder[i],activeOrder[j]]=[activeOrder[j],activeOrder[i]];
   }
-  pos=0; renderCard();
+  activePos=0; renderCard();
 };
 
-/* 卡片清单 */
+/* 卡片清单（随当前牌组刷新） */
 const cardList = document.getElementById('cardList');
-document.getElementById('deckCount').textContent = '（共 ' + deck.length + ' 张）';
-deck.forEach(c=>{
-  const d = document.createElement('div');
-  d.className = 'list-item';
-  d.innerHTML = '<div class="q"></div><div class="a"></div>';
-  d.children[0].textContent = c[0];
-  d.children[1].textContent = c[1];
-  cardList.appendChild(d);
-});
+function renderCardList(list){
+  cardList.innerHTML='';
+  const tag = (list!==deck) ? ' · 本词根专属' : '';
+  document.getElementById('deckCount').textContent = '（共 ' + list.length + ' 张' + tag + '）';
+  list.forEach(c=>{
+    const d = document.createElement('div');
+    d.className = 'list-item';
+    d.innerHTML = '<div class="q"></div><div class="a"></div>';
+    d.children[0].textContent = c[0];
+    d.children[1].textContent = c[1];
+    cardList.appendChild(d);
+  });
+}
+renderCardList(deck);
+
+/* 单词根测试：从词根详情页进入，只刷本课刚学的单词 */
+function buildRootDeck(rootId){
+  const r = ROOTS.find(x=>x.id===rootId);
+  if(!r) return [];
+  const cards = [];
+  cards.push([`词根 ${r.root} 表示什么？`, `${r.meaning}（${r.en}）`, null]);
+  const tmp = document.createElement('div');
+  tmp.innerHTML = r.html;
+  tmp.querySelectorAll('.root-line').forEach(ln=>{
+    const wordEl = ln.querySelector('.word');
+    if(!wordEl) return;
+    const w = wordEl.textContent.trim();
+    const clone = ln.cloneNode(true);
+    const sub = clone.querySelector('.sub');
+    if(sub) sub.remove();
+    let text = clone.textContent.trim().replace(/\s+/g,' ');
+    text = text.replace(new RegExp('^'+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*=\\s*'), '');
+    cards.push([`${w} 怎么拆分？`, text, w]);
+  });
+  return cards;
+}
+function startRootTest(rootId){
+  const sub = buildRootDeck(rootId);
+  if(sub.length === 0) return;
+  activeDeck = sub;
+  activeOrder = sub.map((_,i)=>i);
+  activePos = 0;
+  renderCard();
+  renderCardList(sub);
+  fromRootTest = true;
+  showView('cards');
+}
+window.startRootTest = startRootTest;
 
 /* 键盘快捷键：仅在闪卡页生效，且不在搜索框输入时 */
 document.addEventListener('keydown', (e) => {
@@ -820,10 +869,10 @@ document.addEventListener('keydown', (e) => {
     toggleFlip();
   } else if(e.key === 'ArrowLeft') {
     e.preventDefault();
-    pos=(pos-1+deck.length)%deck.length; renderCard();
+    activePos=(activePos-1+activeDeck.length)%activeDeck.length; renderCard();
   } else if(e.key === 'ArrowRight') {
     e.preventDefault();
-    pos=(pos+1)%deck.length; renderCard();
+    activePos=(activePos+1)%activeDeck.length; renderCard();
   }
 });
 /* "/" 快捷聚焦搜索 */
