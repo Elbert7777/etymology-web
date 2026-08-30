@@ -446,14 +446,14 @@ const ROOTS = [
 
 /* ================= 闪卡数据 ================= */
 const deck = [
-  ["表示'外/出'的前缀是？","ex / e / ef → export 出口","export"],
-  ["表示'内/进'的前缀？","in / im → inject 注射","inject"],
-  ["表示'重新/再次'的前缀？","re → return 返回","return"],
-  ["表示'共同/一起'的前缀？","com / con / co / col → connect 连接","connect"],
-  ["表示'否定'的前缀有哪些？","un / im / in / dis → unhappy 不快乐","unhappy"],
-  ["词根 radi 表示？","射线、辐射(ray) → radius 半径","radius"],
-  ["词根 radic 表示？","根(root) → radical 根本的","radical"],
-  ["词根 pose 表示？","放、放置(put) → expose 暴露","expose"],
+  ["表示'外/出'的前缀是？","ex / e / ef → export 出口",null],
+  ["表示'内/进'的前缀？","in / im → inject 注射",null],
+  ["表示'重新/再次'的前缀？","re → return 返回",null],
+  ["表示'共同/一起'的前缀？","com / con / co / col → connect 连接",null],
+  ["表示'否定'的前缀有哪些？","un / im / in / dis → unhappy 不快乐",null],
+  ["词根 radi 表示？","射线、辐射(ray) → radius 半径",null],
+  ["词根 radic 表示？","根(root) → radical 根本的",null],
+  ["词根 pose 表示？","放、放置(put) → expose 暴露",null],
   ["radi 和 radic 的区别？","radi=射线/辐射，radic=根，拼写相近但不是同一词根",null],
   ["eradicate 怎么拆分？","e(向外) + radic(根) + ate → 连根拔出去 → 根除","eradicate"],
   ["radical 怎么拆分？","radic(根) + al(形容词) → 触及根本 → 根本的；彻底的","radical"],
@@ -470,8 +470,8 @@ const deck = [
   ["前缀决定什么？","词义（意思）",null],
   ["后缀决定什么？","词性（名词/动词/形容词）",null],
   ["词根决定什么？","核心义（单词的根本意思）",null],
-  ["表示'转移/转变'的前缀？","trans → transfer 转移","transfer"],
-  ["表示'相互之间'的前缀？","inter → internet 互联网","internet"],
+  ["表示'转移/转变'的前缀？","trans → transfer 转移",null],
+  ["表示'相互之间'的前缀？","inter → internet 互联网",null],
   ["动词后缀有哪些？","-ate / -ize / -ify / -ish",null]
 ];
 
@@ -683,29 +683,35 @@ const aEl = document.getElementById('a');
 const prog = document.getElementById('prog');
 const bar = document.getElementById('barfill');
 
-function renderCard(autoplay){
+function renderCard(){
+  stopSpeak();
   card.classList.remove('flipped');
   qEl.textContent = deck[order[pos]][0];
   aEl.textContent = deck[order[pos]][1];
   prog.textContent = (pos+1) + ' / ' + deck.length;
   bar.style.width = ((pos+1)/deck.length*100) + '%';
-  if(autoplay && deck[order[pos]][2]) speakWord(deck[order[pos]][2]);
 }
-document.getElementById('flip').onclick = ()=> card.classList.toggle('flipped');
-card.onclick = ()=> card.classList.toggle('flipped');
+/* 翻面：翻到背面（看答案）时朗读该卡单词（仅单词卡有发音词） */
+function toggleFlip(){
+  const goingBack = !card.classList.contains('flipped');
+  card.classList.toggle('flipped');
+  if(goingBack && deck[order[pos]][2]) speakWord(deck[order[pos]][2]);
+}
+document.getElementById('flip').onclick = toggleFlip;
+card.onclick = toggleFlip;
 document.getElementById('replay').onclick = (e)=>{
   e.stopPropagation();
   const w = deck[order[pos]][2];
   if(w) speakWord(w);
 };
-document.getElementById('next').onclick = ()=>{ pos=(pos+1)%deck.length; renderCard(true); };
-document.getElementById('prev').onclick = ()=>{ pos=(pos-1+deck.length)%deck.length; renderCard(true); };
+document.getElementById('next').onclick = ()=>{ pos=(pos+1)%deck.length; renderCard(); };
+document.getElementById('prev').onclick = ()=>{ pos=(pos-1+deck.length)%deck.length; renderCard(); };
 document.getElementById('shuffle').onclick = ()=>{
   for(let i=deck.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
     [order[i],order[j]]=[order[j],order[i]];
   }
-  pos=0; renderCard(true);
+  pos=0; renderCard();
 };
 
 /* 卡片清单 */
@@ -726,13 +732,13 @@ document.addEventListener('keydown', (e) => {
   if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if(e.key === ' ' || e.key === 'Enter') {
     e.preventDefault();
-    card.classList.toggle('flipped');
+    toggleFlip();
   } else if(e.key === 'ArrowLeft') {
     e.preventDefault();
-    pos=(pos-1+deck.length)%deck.length; renderCard(true);
+    pos=(pos-1+deck.length)%deck.length; renderCard();
   } else if(e.key === 'ArrowRight') {
     e.preventDefault();
-    pos=(pos+1)%deck.length; renderCard(true);
+    pos=(pos+1)%deck.length; renderCard();
   }
 });
 /* "/" 快捷聚焦搜索 */
@@ -741,7 +747,7 @@ document.addEventListener('keydown', (e)=>{
 });
 
 /* 初始化：支持 #/root-pose 这样的深链接 */
-renderCard(false);
+renderCard();
 (function init(){
   const h = location.hash.replace(/^#\//,'');
   showView(h || 'overview');
