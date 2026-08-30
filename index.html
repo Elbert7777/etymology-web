@@ -129,6 +129,20 @@
     box-shadow:0 0 0 1px rgba(224,172,40,.5);
   }
 
+  /* 发音：主词/相关词点击朗读 */
+  .word{cursor:pointer}
+  .word::after{content:"🔊"; font-size:11px; margin-left:5px; opacity:.5; vertical-align:1px; pointer-events:none}
+  .word:hover::after{opacity:1}
+  .sub-word{cursor:pointer; border-bottom:1px dashed #b6c2d2; padding:0 2px; white-space:nowrap}
+  .sub-word::after{content:"🔊"; font-size:10px; margin-left:3px; opacity:.5; vertical-align:1px; pointer-events:none}
+  .sub-word:hover::after{opacity:1}
+  .spk-btn{
+    border:1px solid var(--line); background:#fff; border-radius:8px;
+    padding:4px 12px; font-size:13px; cursor:pointer; color:#334155; margin-top:10px;
+  }
+  .spk-btn:hover{background:var(--blue-bg); border-color:#bcdcf5}
+  .speaking{background:var(--blue-bg)!important; border-color:#bcdcf5!important}
+
   /* 词根索引网格 */
   .root-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px}
   .root-tile{
@@ -342,7 +356,7 @@
         <div class="bar"><i id="barfill"></i></div>
         <div class="flip" id="flipCard">
           <div class="flip-in">
-            <div class="face front"><div><div class="big" id="q">问题加载中...</div><div class="small">点击卡片或"翻面"按钮看答案</div></div></div>
+            <div class="face front"><div><div class="big" id="q">问题加载中...</div><div class="small">点击卡片或"翻面"按钮看答案</div><button class="spk-btn" id="replay">🔊 朗读</button></div></div>
             <div class="face back"><div><div class="big" id="a">答案</div></div></div>
           </div>
         </div>
@@ -401,30 +415,30 @@ const ROOTS = [
     html:`
       <h3 class="sub-h">词根拆解</h3>
       <div class="root-line"><span class="word">expose</span> = <span style="color:var(--blue);font-weight:700">ex(向外)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 往外放 → <span class="mean">v. 暴露；揭露；使显露</span>
-        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 同义词：reveal / disclose / uncover</div>
+        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 同义词：<span class="sub-word">reveal</span> / <span class="sub-word">disclose</span> / <span class="sub-word">uncover</span></div>
       </div>
       <div class="root-line"><span class="word">compose</span> = <span style="color:var(--blue);font-weight:700">com(一起)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放到一起 → <span class="mean">v. 组成；创作</span>
-        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 相关词：composition n. 作文/乐曲/作品；composite adj. 复合的、合成的</div>
+        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 相关词：<span class="sub-word">composition</span> n. 作文/乐曲/作品；<span class="sub-word">composite</span> adj. 复合的、合成的</div>
       </div>
       <div class="root-line"><span class="word">propose</span> = <span style="color:var(--blue);font-weight:700">pro(向前)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 把想法放到前面 → <span class="mean">v. 提议；提名；求婚</span></div>
       <div class="root-line"><span class="word">dispose</span> = <span style="color:var(--blue);font-weight:700">dis(分开)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放到别处 → <span class="mean">v. 处理；丢弃；安排</span>
-        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 同义词：discard（丢弃）；固定搭配 dispose of 处理掉</div>
+        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 同义词：<span class="sub-word">discard</span>（丢弃）；固定搭配 <span class="sub-word">dispose of</span> 处理掉</div>
       </div>
       <div class="root-line"><span class="word">oppose</span> = <span style="color:var(--blue);font-weight:700">op(对面)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 把观点放到对面 → <span class="mean">v. 反对</span>
-        <div class="sub" style="color:var(--muted); margin-top:6px">💡 op- 是 ob- 在 p 前的变体，单词仍拼作 <b>oppose</b>；opponent n. 对手、反对者（op + pon(放) + ent(人)）</div>
+        <div class="sub" style="color:var(--muted); margin-top:6px">💡 op- 是 ob- 在 p 前的变体，单词仍拼作 <b>oppose</b>；<span class="sub-word">opponent</span> n. 对手、反对者（op + pon(放) + ent(人)）</div>
       </div>
       <div class="root-line"><span class="word">depose</span> = <span style="color:var(--blue);font-weight:700">de(向下)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 把某人从位置上放下来 → <span class="mean">v. 废除；罢免</span>
-        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 相关词：deposit n. 沉淀物、定金（de 向下 + posit 放 → 放下的东西）</div>
+        <div class="sub" style="color:var(--muted); margin-top:6px">🔗 相关词：<span class="sub-word">deposit</span> n. 沉淀物、定金（de 向下 + posit 放 → 放下的东西）</div>
       </div>
       <div class="root-line"><span class="word">impose</span> = <span style="color:var(--blue);font-weight:700">im(进入/在…上)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放到别人身上 → <span class="mean">v. 强加；征税</span></div>
       <div class="root-line"><span class="word">position</span> = <span style="color:var(--green);font-weight:700">posit(放)</span> + <span style="color:var(--red);font-weight:700">ion(名词后缀)</span> → 放置的地方 → <span class="mean">n. 位置；职位</span>
-        <div class="sub" style="color:var(--muted); margin-top:6px">💡 posit 是 pose 的变体（拉丁语 positus），同类还有 deposit、composite</div>
+        <div class="sub" style="color:var(--muted); margin-top:6px">💡 posit 是 pose 的变体（拉丁语 positus），同类还有 <span class="sub-word">deposit</span>、<span class="sub-word">composite</span></div>
       </div>
       <div class="root-line"><span class="word">suppose</span> = <span style="color:var(--blue);font-weight:700">sup(在…下)</span> + <span style="color:var(--green);font-weight:700">pose(放)</span> → 放在底下当作前提 → <span class="mean">v. 假设；猜想</span>
         <div class="sub" style="color:var(--muted); margin-top:6px">💡 sup- 是 sub- 在 p 前的变体，单词仍拼作 <b>suppose</b></div>
       </div>
       <div class="root-line"><span class="word">postpone</span> = <span style="color:var(--blue);font-weight:700">post(后)</span> + <span style="color:var(--green);font-weight:700">pon(放)</span> + e → 放到后面 → <span class="mean">v. 推迟；延期</span>
-        <div class="sub" style="color:var(--muted); margin-top:6px">💡 pon 是 pos 的变体（拉丁语 ponere），同类还有 opponent（放到对面的人）</div>
+        <div class="sub" style="color:var(--muted); margin-top:6px">💡 pon 是 pos 的变体（拉丁语 ponere），同类还有 <span class="sub-word">opponent</span>（放到对面的人）</div>
       </div>
     `
   }
@@ -432,33 +446,33 @@ const ROOTS = [
 
 /* ================= 闪卡数据 ================= */
 const deck = [
-  ["表示'外/出'的前缀是？","ex / e / ef → export 出口"],
-  ["表示'内/进'的前缀？","in / im → inject 注射"],
-  ["表示'重新/再次'的前缀？","re → return 返回"],
-  ["表示'共同/一起'的前缀？","com / con / co / col → connect 连接"],
-  ["表示'否定'的前缀有哪些？","un / im / in / dis → unhappy 不快乐"],
-  ["词根 radi 表示？","射线、辐射(ray) → radius 半径"],
-  ["词根 radic 表示？","根(root) → radical 根本的"],
-  ["词根 pose 表示？","放、放置(put) → expose 暴露"],
-  ["radi 和 radic 的区别？","radi=射线/辐射，radic=根，拼写相近但不是同一词根"],
-  ["eradicate 怎么拆分？","e(向外) + radic(根) + ate → 连根拔出去 → 根除"],
-  ["radical 怎么拆分？","radic(根) + al(形容词) → 触及根本 → 根本的；彻底的"],
-  ["expose 怎么拆分？","ex(向外) + pose(放) → 往外放 → 暴露；揭露"],
-  ["compose 怎么拆分？","com(一起) + pose(放) → 放到一起 → 组成；创作"],
-  ["propose 怎么拆分？","pro(向前) + pose(放) → 把想法放前面 → 提议；求婚"],
-  ["dispose 怎么拆分？","dis(分开) + pose(放) → 放到别处 → 处理；丢弃"],
-  ["oppose 怎么拆分？","op(对面) + pose(放) → 把观点放对面 → 反对（op- 是 ob- 变体）"],
-  ["impose 怎么拆分？","im(进入/在…上) + pose(放) → 放到别人身上 → 强加"],
-  ["depose 怎么拆分？","de(向下) + pose(放) → 从位置上放下来 → 罢免；废除"],
-  ["position 怎么拆分？","posit(放) + ion(名词) → 放置的地方 → 位置（posit 是 pose 变体）"],
-  ["suppose 怎么拆分？","sup(在…下) + pose(放) → 放在底下作前提 → 假设（sup- 是 sub- 变体）"],
-  ["postpone 怎么拆分？","post(后) + pon(放) → 放到后面 → 推迟（pon 是 pos 变体）"],
-  ["前缀决定什么？","词义（意思）"],
-  ["后缀决定什么？","词性（名词/动词/形容词）"],
-  ["词根决定什么？","核心义（单词的根本意思）"],
-  ["表示'转移/转变'的前缀？","trans → transfer 转移"],
-  ["表示'相互之间'的前缀？","inter → internet 互联网"],
-  ["动词后缀有哪些？","-ate / -ize / -ify / -ish"]
+  ["表示'外/出'的前缀是？","ex / e / ef → export 出口","export"],
+  ["表示'内/进'的前缀？","in / im → inject 注射","inject"],
+  ["表示'重新/再次'的前缀？","re → return 返回","return"],
+  ["表示'共同/一起'的前缀？","com / con / co / col → connect 连接","connect"],
+  ["表示'否定'的前缀有哪些？","un / im / in / dis → unhappy 不快乐","unhappy"],
+  ["词根 radi 表示？","射线、辐射(ray) → radius 半径","radius"],
+  ["词根 radic 表示？","根(root) → radical 根本的","radical"],
+  ["词根 pose 表示？","放、放置(put) → expose 暴露","expose"],
+  ["radi 和 radic 的区别？","radi=射线/辐射，radic=根，拼写相近但不是同一词根",null],
+  ["eradicate 怎么拆分？","e(向外) + radic(根) + ate → 连根拔出去 → 根除","eradicate"],
+  ["radical 怎么拆分？","radic(根) + al(形容词) → 触及根本 → 根本的；彻底的","radical"],
+  ["expose 怎么拆分？","ex(向外) + pose(放) → 往外放 → 暴露；揭露","expose"],
+  ["compose 怎么拆分？","com(一起) + pose(放) → 放到一起 → 组成；创作","compose"],
+  ["propose 怎么拆分？","pro(向前) + pose(放) → 把想法放前面 → 提议；求婚","propose"],
+  ["dispose 怎么拆分？","dis(分开) + pose(放) → 放到别处 → 处理；丢弃","dispose"],
+  ["oppose 怎么拆分？","op(对面) + pose(放) → 把观点放对面 → 反对（op- 是 ob- 变体）","oppose"],
+  ["impose 怎么拆分？","im(进入/在…上) + pose(放) → 放到别人身上 → 强加","impose"],
+  ["depose 怎么拆分？","de(向下) + pose(放) → 从位置上放下来 → 罢免；废除","depose"],
+  ["position 怎么拆分？","posit(放) + ion(名词) → 放置的地方 → 位置（posit 是 pose 变体）","position"],
+  ["suppose 怎么拆分？","sup(在…下) + pose(放) → 放在底下作前提 → 假设（sup- 是 sub- 变体）","suppose"],
+  ["postpone 怎么拆分？","post(后) + pon(放) → 放到后面 → 推迟（pon 是 pos 变体）","postpone"],
+  ["前缀决定什么？","词义（意思）",null],
+  ["后缀决定什么？","词性（名词/动词/形容词）",null],
+  ["词根决定什么？","核心义（单词的根本意思）",null],
+  ["表示'转移/转变'的前缀？","trans → transfer 转移","transfer"],
+  ["表示'相互之间'的前缀？","inter → internet 互联网","internet"],
+  ["动词后缀有哪些？","-ate / -ize / -ify / -ish",null]
 ];
 
 /* ================= 动态生成词根详情页 ================= */
@@ -607,6 +621,59 @@ document.addEventListener('click', e=>{
   if(!e.target.closest('.searchbox')) searchResults.classList.remove('open');
 });
 
+/* ================= 发音：真人优先，失败回退机器音 ================= */
+let curAudio = null;
+let youdaoBroken = false; // 真人接口不可用则记住，后续直接机器音，避免反复空等
+function stopSpeak(){
+  if(curAudio){ curAudio.pause(); curAudio = null; }
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+}
+function speakWord(word){
+  const w = String(word||'').replace(/[^a-zA-Z'\- ]/g,'').trim();
+  if(!w) return;
+  stopSpeak();
+  if(youdaoBroken || !('Audio' in window)){
+    speakTTS(w);
+    return;
+  }
+  // 真人发音优先：有道 TTS（美音 type=2，https 不触发混合内容拦截）
+  try{
+    const a = new Audio('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(w) + '&type=2');
+    curAudio = a;
+    let done = false;
+    const fallback = ()=>{ if(!done){ done = true; youdaoBroken = true; if(curAudio===a) curAudio=null; speakTTS(w); } };
+    a.onerror = fallback;
+    a.oncanplay = ()=>{ a.play().catch(fallback); };
+    setTimeout(()=>{ if(!done && curAudio===a && a.readyState < 3){ done = true; youdaoBroken = true; curAudio=null; a.pause(); speakTTS(w); } }, 5000);
+    a.load();
+  }catch(e){
+    speakTTS(w);
+  }
+}
+function speakTTS(word){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = 'en-US';
+  u.rate = 0.9;
+  const voices = speechSynthesis.getVoices();
+  const ev = voices.find(v=>/^en[-_]US/i.test(v.lang)) || voices.find(v=>/^en/i.test(v.lang));
+  if(ev) u.voice = ev;
+  speechSynthesis.speak(u);
+}
+/* 事件委托：点击主词/相关词即发音 */
+document.addEventListener('click', e=>{
+  const el = e.target.closest ? e.target.closest('.word, .sub-word') : null;
+  if(el){
+    const text = el.textContent.replace(/[^a-zA-Z'\- ]/g,'').trim();
+    if(text){
+      el.classList.add('speaking');
+      setTimeout(()=> el.classList.remove('speaking'), 1500);
+      speakWord(text);
+    }
+  }
+});
+
 /* ================= 闪卡逻辑 ================= */
 let order = deck.map((_,i)=>i);
 let pos = 0;
@@ -616,23 +683,29 @@ const aEl = document.getElementById('a');
 const prog = document.getElementById('prog');
 const bar = document.getElementById('barfill');
 
-function renderCard(){
+function renderCard(autoplay){
   card.classList.remove('flipped');
   qEl.textContent = deck[order[pos]][0];
   aEl.textContent = deck[order[pos]][1];
   prog.textContent = (pos+1) + ' / ' + deck.length;
   bar.style.width = ((pos+1)/deck.length*100) + '%';
+  if(autoplay && deck[order[pos]][2]) speakWord(deck[order[pos]][2]);
 }
 document.getElementById('flip').onclick = ()=> card.classList.toggle('flipped');
 card.onclick = ()=> card.classList.toggle('flipped');
-document.getElementById('next').onclick = ()=>{ pos=(pos+1)%deck.length; renderCard(); };
-document.getElementById('prev').onclick = ()=>{ pos=(pos-1+deck.length)%deck.length; renderCard(); };
+document.getElementById('replay').onclick = (e)=>{
+  e.stopPropagation();
+  const w = deck[order[pos]][2];
+  if(w) speakWord(w);
+};
+document.getElementById('next').onclick = ()=>{ pos=(pos+1)%deck.length; renderCard(true); };
+document.getElementById('prev').onclick = ()=>{ pos=(pos-1+deck.length)%deck.length; renderCard(true); };
 document.getElementById('shuffle').onclick = ()=>{
   for(let i=deck.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
     [order[i],order[j]]=[order[j],order[i]];
   }
-  pos=0; renderCard();
+  pos=0; renderCard(true);
 };
 
 /* 卡片清单 */
@@ -656,10 +729,10 @@ document.addEventListener('keydown', (e) => {
     card.classList.toggle('flipped');
   } else if(e.key === 'ArrowLeft') {
     e.preventDefault();
-    pos=(pos-1+deck.length)%deck.length; renderCard();
+    pos=(pos-1+deck.length)%deck.length; renderCard(true);
   } else if(e.key === 'ArrowRight') {
     e.preventDefault();
-    pos=(pos+1)%deck.length; renderCard();
+    pos=(pos+1)%deck.length; renderCard(true);
   }
 });
 /* "/" 快捷聚焦搜索 */
@@ -668,7 +741,7 @@ document.addEventListener('keydown', (e)=>{
 });
 
 /* 初始化：支持 #/root-pose 这样的深链接 */
-renderCard();
+renderCard(false);
 (function init(){
   const h = location.hash.replace(/^#\//,'');
   showView(h || 'overview');
